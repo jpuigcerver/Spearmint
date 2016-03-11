@@ -368,7 +368,10 @@ class BaseTask(object):
                 raise Exception("Unknown variable type: %s" % variable['type'])
 
         if squeeze:
-            V = np.squeeze(V)
+            # Squeeze will create an array with no shape if V has only 1 element 
+            # in 1 dimension [i.e. (1,) -> ()]. This breaks the suggest() method,
+            # since it expects to receive a 1-D array.
+            V = np.ma.atleast_1d(np.squeeze(V))
 
         return V
 
